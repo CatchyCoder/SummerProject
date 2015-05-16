@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -19,7 +20,7 @@ public class SerializationUtil {
      * Deserialize to Object from given file. We use the general Object so as
      * that it can work for any Java Class.
      */
-    public static Object load(String fileName) {
+    public static Object load(String fileName) throws InvalidClassException {
     	
     	try {
     		FileInputStream fis = new FileInputStream(fileName);

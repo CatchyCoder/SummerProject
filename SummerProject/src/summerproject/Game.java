@@ -18,8 +18,6 @@ public class Game extends StateBasedGame {
 
 	public Game(String name) {
 		super(name);
-		
-		log.debug("game constructor");
 	}
 	
 	@Override
@@ -31,5 +29,4 @@ public class Game extends StateBasedGame {
 		this.addState(new Pause());
 		this.enterState(State.MENU.ordinal());
 	}
-	
 }

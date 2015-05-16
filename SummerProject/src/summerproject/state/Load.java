@@ -1,5 +1,7 @@
 package summerproject.state;
 
+import java.io.InvalidClassException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.newdawn.slick.Color;
@@ -50,12 +52,25 @@ public class Load extends BasicGameState implements Runnable {
 		// Load a game
 		else {
 			// TODO: this is a fake load
-			//World world = new World();
-			//world.testMethod(999);
-			//SerializationUtil.save(world, "world");
-			World world = (World) SerializationUtil.load("world");
-			play.setWorld(world);
-			log.trace("loaded value = " + world.testVar);
+			World world = null;
+			try {
+				world = (World) SerializationUtil.load("world");
+			} catch(InvalidClassException e) {
+				// Load failed because the save file is not compatible
+				// with the current version
+				log.error("Save file is not compatible with current version.");
+				
+				// TODO: Finish handling old save files
+			}
+			finally {
+				// Returns to the menu if the game failed to load
+				if(world == null) {
+					game.enterState(State.MENU.ordinal());
+					return;
+				}
+				play.setWorld(world);
+				log.trace("loaded value = " + world.testVar);
+			}
 		}
 		
 		game.enterState(State.PLAY.ordinal());

@@ -39,7 +39,9 @@ public class Driver {
 		try {
 			AppGameContainer gameContainer = new AppGameContainer(new Game("Clay's Game"));
 			gameContainer.setDisplayMode(640, 480, false);
+			gameContainer.setIcon("res/icons/icon_32.png");
 			gameContainer.start();
+			
 		} catch(SlickException e) {
 			log.error(e, e);
 			log.debug("an exception should have been thrown");

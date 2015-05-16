@@ -10,8 +10,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import summerproject.Game;
-
 public class Menu extends BasicGameState {
 	
 	private static final Logger log = LogManager.getLogger(Menu.class);

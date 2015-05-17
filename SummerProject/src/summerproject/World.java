@@ -17,7 +17,7 @@ public class World implements Entity, Serializable {
 	 * becomes incompatible with the earlier version. Serialization
 	 * is used for saving the state of the game.
 	 */
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 1L;
 	
 	private static final Logger log = LogManager.getLogger(World.class);
 	
@@ -40,7 +40,7 @@ public class World implements Entity, Serializable {
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) {
-		
+		log.debug("world update");
 	}
 
 	@Override

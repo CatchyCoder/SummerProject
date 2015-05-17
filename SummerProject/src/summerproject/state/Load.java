@@ -1,12 +1,11 @@
 package summerproject.state;
 
-import java.io.InvalidClassException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -22,58 +21,72 @@ import summerproject.World;
  * @author Clay Kuznia
  *
  */
-public class Load extends BasicGameState implements Runnable {
+public class Load extends BasicGameState {
 	
 	private static final Logger log = LogManager.getLogger(Load.class);
 	
-	private boolean isNewGame = true;
-	private Thread thread;
+	private boolean loaded = false, isNewGame = true, failed = false;
 	
 	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		// Using a separate thread to load the world, and the main thread
-		// to update the screen.
-		thread = new Thread(this);
-		thread.setName("world-generation");
-	}
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		g.setColor(Color.white);
-		g.drawString("Creating game...", 100, 100);
+		if(!failed) g.drawString("Creating game...", 100, 100);
+		else g.drawString(
+				"Failed to load game. The save file may be incompatible\n" + 
+				"with the current game version. Press [Esc] to return\n" +
+				"to menu.", 100, 100);
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		Play play = (Play) game.getState(State.PLAY.ordinal());
 		
-		// New game
-		if(isNewGame) play.setWorld(new World());
-		// Load a game
-		else {
-			// TODO: this is a fake load
-			World world = null;
-			try {
-				world = (World) SerializationUtil.load("world");
-			} catch(InvalidClassException e) {
-				// Load failed because the save file is not compatible
-				// with the current version
-				log.error("Save file is not compatible with current version.");
+		// If an attempt to load has not been made yet, load the game
+		if(!loaded && !failed) {
+			Play play = (Play) game.getState(State.PLAY.ordinal());
+			
+			// New game
+			if(isNewGame) play.setWorld(new World());
+			// Load game
+			else {
+				World world = (World) SerializationUtil.load("world");
 				
-				// TODO: Finish handling old save files
-			}
-			finally {
-				// Returns to the menu if the game failed to load
 				if(world == null) {
-					game.enterState(State.MENU.ordinal());
+					// The game has failed to load
+					failed = true;
 					return;
 				}
+				
 				play.setWorld(world);
+				loaded = true;
 				log.trace("loaded value = " + world.testVar);
+				
+			}
+			
+			// Resetting load values
+			reset();
+			game.enterState(State.PLAY.ordinal());
+		}
+		else {
+			// The game must have failed to load, so wait for user input
+			
+			Input input = container.getInput();
+			
+			if(input.isKeyPressed(Input.KEY_ESCAPE)) {
+				// Resetting load values
+				reset();
+				input.clearKeyPressedRecord();
+				log.debug("Going to menu from load");
+				game.enterState(State.MENU.ordinal());
 			}
 		}
-		
-		game.enterState(State.PLAY.ordinal());
+	}
+	
+	private void reset() {
+		loaded = failed = false;
+		isNewGame = true;
 	}
 	
 	public void isNewGame(boolean value) {
@@ -83,10 +96,5 @@ public class Load extends BasicGameState implements Runnable {
 	@Override
 	public int getID() {
 		return State.LOAD.ordinal();
-	}
-
-	@Override
-	public void run() {
-		
 	}
 }

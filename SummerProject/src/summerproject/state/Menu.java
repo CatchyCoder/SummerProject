@@ -30,6 +30,7 @@ public class Menu extends BasicGameState {
 		Input input = container.getInput();
 		
 		if(input.isKeyPressed(Input.KEY_ESCAPE)) {
+			
 			input.clearKeyPressedRecord();
 			Load load = (Load) game.getState(State.LOAD.ordinal());
 			load.isNewGame(false); // Creating a new game

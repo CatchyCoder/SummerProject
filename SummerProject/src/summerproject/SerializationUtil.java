@@ -20,7 +20,7 @@ public class SerializationUtil {
      * Deserialize to Object from given file. We use the general Object so as
      * that it can work for any Java Class.
      */
-    public static Object load(String fileName) throws InvalidClassException {
+    public static Object load(String fileName) {
     	
     	try {
     		FileInputStream fis = new FileInputStream(fileName);
@@ -31,13 +31,16 @@ public class SerializationUtil {
     		
     		log.debug("Successfully loaded from \"" + fileName + "\".");
     		return obj;
-    	} catch(IOException e) {
-    		log.error(e, e);
-    	} catch(ClassNotFoundException e) {
+    	} catch(InvalidClassException e) {
+    		// Load failed because the save file is not compatible with the current version
+			log.error("Save file \"" + fileName + "\" is not compatible with current game version.", e);
+			
+			// TODO: Finish handling old save files
+    	} catch(Exception e) {
     		log.error(e, e);
     	}
     	
-    	log.error("Failed to load from \"" + fileName + "\".\nAn exception should have been thrown.");
+    	log.error("Failed to load from \"" + fileName + "\". An exception should have been thrown.");
 		return null;
     }
  

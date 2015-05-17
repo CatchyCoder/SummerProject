@@ -23,8 +23,7 @@ public class Play extends BasicGameState {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		if(world != null) world.render(container, game, g);
-		else log.error("World is null");
+		world.render(container, game, g);
 	}
 
 	@Override

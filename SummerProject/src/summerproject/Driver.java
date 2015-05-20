@@ -10,6 +10,8 @@ public class Driver {
 	private static final Logger log = LogManager.getLogger(Driver.class);
 	
 	public static void main(String[] args) {
+		log.debug("\n\nNew session started.");
+		
 		// Detecting operating system
 		final String OS = System.getProperty("os.name").toLowerCase();
 		String nativePath = "native";
@@ -37,7 +39,7 @@ public class Driver {
 		
 		// Creating the game component
 		try {
-			AppGameContainer gameContainer = new AppGameContainer(new Game("Clay's Game"));
+			AppGameContainer gameContainer = new AppGameContainer(new Game("Unknown Game"));
 			gameContainer.setDisplayMode(640, 480, false);
 			gameContainer.setIcon("res/icons/icon_32.png");
 			gameContainer.start();

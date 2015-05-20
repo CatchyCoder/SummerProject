@@ -27,8 +27,7 @@ public class Play extends BasicGameState {
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta)
-			throws SlickException {
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		Input input = container.getInput();
 		
 		if(input.isKeyPressed(Input.KEY_ESCAPE)) {

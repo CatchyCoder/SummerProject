@@ -21,7 +21,6 @@ public class SerializationUtil {
      * that it can work for any Java Class.
      */
     public static Object load(String fileName) {
-    	
     	try {
     		FileInputStream fis = new FileInputStream(fileName);
     		BufferedInputStream bis = new BufferedInputStream(fis);
@@ -34,13 +33,10 @@ public class SerializationUtil {
     	} catch(InvalidClassException e) {
     		// Load failed because the save file is not compatible with the current version
 			log.error("Save file \"" + fileName + "\" is not compatible with current game version.", e);
-			
-			// TODO: Finish handling old save files
     	} catch(Exception e) {
-    		log.error(e, e);
+    		log.error("Failed to load from \"" + fileName + "\"", e);
     	}
     	
-    	log.error("Failed to load from \"" + fileName + "\". An exception should have been thrown.");
 		return null;
     }
  
@@ -57,8 +53,7 @@ public class SerializationUtil {
     		
     		log.debug("Successfully saved " + obj.getClass().getName() + " to \"" + fileName + "\".");
     	} catch(IOException e) {
-    		log.error(e, e);
-    		log.error("Failed to save to \"" + fileName + "\".\nAn exception should have been thrown.");
+    		log.error("Failed to save to \"" + fileName + "\".\n", e);
     	}
     }
 }

@@ -15,9 +15,7 @@ public class Menu extends BasicGameState {
 	private static final Logger log = LogManager.getLogger(Menu.class);
 	
 	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		log.debug("menu init");
-	}
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
@@ -30,10 +28,9 @@ public class Menu extends BasicGameState {
 		Input input = container.getInput();
 		
 		if(input.isKeyPressed(Input.KEY_ESCAPE)) {
-			
 			input.clearKeyPressedRecord();
 			Load load = (Load) game.getState(State.LOAD.ordinal());
-			load.isNewGame(false); // Creating a new game
+			load.isNewGame(false);
 			game.enterState(State.LOAD.ordinal());
 		}
 	}
@@ -42,5 +39,4 @@ public class Menu extends BasicGameState {
 	public int getID() {
 		return State.MENU.ordinal();
 	}
-
 }

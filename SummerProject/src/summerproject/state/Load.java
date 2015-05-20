@@ -35,9 +35,9 @@ public class Load extends BasicGameState {
 		g.setColor(Color.white);
 		if(!failed) g.drawString("Creating game...", 100, 100);
 		else g.drawString(
-				"Failed to load game. The save file may be incompatible\n" + 
-				"with the current game version. Press [Esc] to return\n" +
-				"to menu.", 100, 100);
+				"Failed to load game. The save file may be corrupted or\n" + 
+				"incompatible with the current game version. Press [Esc]\n" +
+				"to return to menu.", 100, 100);
 	}
 
 	@Override
@@ -51,6 +51,7 @@ public class Load extends BasicGameState {
 			if(isNewGame) play.setWorld(new World());
 			// Load game
 			else {
+				// Load the world
 				World world = (World) SerializationUtil.load("world");
 				
 				if(world == null) {
@@ -60,9 +61,7 @@ public class Load extends BasicGameState {
 				}
 				
 				play.setWorld(world);
-				loaded = true;
-				log.trace("loaded value = " + world.testVar);
-				
+				loaded = true;				
 			}
 			
 			// Resetting load values
@@ -78,7 +77,6 @@ public class Load extends BasicGameState {
 				// Resetting load values
 				reset();
 				input.clearKeyPressedRecord();
-				log.debug("Going to menu from load");
 				game.enterState(State.MENU.ordinal());
 			}
 		}

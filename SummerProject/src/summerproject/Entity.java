@@ -7,7 +7,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public interface Entity {
 	
 	/**
-	 * Update this entity, called for each frame update.
+	 * Updates this entity, called for each frame update.
 	 * 
 	 * @param container
 	 * @param game

@@ -48,7 +48,7 @@ public class Load extends BasicGameState {
 			Play play = (Play) game.getState(State.PLAY.ordinal());
 			
 			// New game
-			if(isNewGame) play.setWorld(new World());
+			if(isNewGame) play.setWorld(new World(container.getWidth(), container.getHeight()));
 			// Load game
 			else {
 				// Load the world

@@ -30,7 +30,7 @@ public class Menu extends BasicGameState {
 		if(input.isKeyPressed(Input.KEY_ESCAPE)) {
 			input.clearKeyPressedRecord();
 			Load load = (Load) game.getState(State.LOAD.ordinal());
-			load.isNewGame(false);
+			load.isNewGame(true);
 			game.enterState(State.LOAD.ordinal());
 		}
 	}

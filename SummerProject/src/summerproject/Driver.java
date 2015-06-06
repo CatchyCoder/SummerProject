@@ -1,8 +1,13 @@
 package summerproject;
 
+import java.io.File;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Driver {
@@ -26,27 +31,42 @@ public class Driver {
 		}
 		
 		log.debug(OS + " detected.");
-		
+		System.out.println(new File(nativePath).getAbsolutePath());
 		// Detecting if running in an executable jar, or running in an IDE
 		boolean isJar = Driver.class.getResource("Driver.class").toString().toLowerCase().startsWith("jar");
 		
+		// Setting the library path if running in a jar, the path is based off the OS
 		if(isJar) {
-			// Setting the library path if running in a jar, the path is based off the OS
-			System.setProperty("org.lwjgl.librarypath", nativePath);
 			log.debug("Executable jar detected.");
+			
+			// Checking if the "native" folder exists
+			File nativeFolder = new File(nativePath);
+			if(nativeFolder.exists()) {
+				System.setProperty("org.lwjgl.librarypath", nativeFolder.getAbsolutePath());
+			} else {
+				log.error("Could not find native folder. Exiting application.");
+				System.exit(2);
+			}
+			
+			// Checking to make sure the "res" folder exists
+			File resFolder = new File("res");
+			if(!resFolder.exists()) {
+				log.error("Could not find resource folder. Exiting applictation");
+				System.exit(3);
+			}
 		}
 		else log.debug("IDE detected.");
 		
 		// Creating the game component
 		try {
-			AppGameContainer gameContainer = new AppGameContainer(new Game("Unknown Game"));
+			Game game = new Game("Unknown Game");
+			AppGameContainer gameContainer = new AppGameContainer(game);
 			gameContainer.setDisplayMode(640, 480, false);
 			gameContainer.setIcon("res/icons/icon_32.png");
 			gameContainer.start();
 			
 		} catch(SlickException e) {
-			log.error(e, e);
-			log.debug("an exception should have been thrown");
-		}
+			log.error("Error creating game. An exception should have been thrown.", e);
+		}		
 	}
 }

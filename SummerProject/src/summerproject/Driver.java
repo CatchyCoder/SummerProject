@@ -31,7 +31,6 @@ public class Driver {
 		}
 		
 		log.debug(OS + " detected.");
-		System.out.println(new File(nativePath).getAbsolutePath());
 		// Detecting if running in an executable jar, or running in an IDE
 		boolean isJar = Driver.class.getResource("Driver.class").toString().toLowerCase().startsWith("jar");
 		
@@ -61,8 +60,9 @@ public class Driver {
 		try {
 			Game game = new Game("Unknown Game");
 			AppGameContainer gameContainer = new AppGameContainer(game);
-			gameContainer.setDisplayMode(640, 480, false);
+			gameContainer.setDisplayMode(720, 720, false);
 			gameContainer.setIcon("res/icons/icon_32.png");
+			gameContainer.setVerbose(false);
 			gameContainer.start();
 			
 		} catch(SlickException e) {

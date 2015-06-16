@@ -23,4 +23,6 @@ public interface Entity {
 	 * @param g
 	 */
 	public abstract void render(GameContainer container, StateBasedGame game, Graphics g);
+	
+	public abstract void handleCollision(Entity entity);
 }

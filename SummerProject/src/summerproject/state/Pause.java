@@ -13,7 +13,7 @@ public class Pause extends BasicGameState {
 
 	@Override
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2) throws SlickException {
-		
+		// use container.setPaused()
 	}
 
 	@Override

@@ -15,7 +15,15 @@ public class Menu extends BasicGameState {
 	private static final Logger log = LogManager.getLogger(Menu.class);
 	
 	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {}
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		container.setTargetFrameRate(120);
+	}
+	
+	@Override
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+		super.enter(container, game);
+		container.setClearEachFrame(true);
+	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {

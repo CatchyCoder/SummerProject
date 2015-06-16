@@ -25,10 +25,15 @@ public class Load extends BasicGameState {
 	
 	private static final Logger log = LogManager.getLogger(Load.class);
 	
-	private boolean loaded = false, isNewGame = true, failed = false;
+	private boolean loaded = false, isNewGame = true, failed = false, rendered = false;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {}
+	
+	@Override
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+		render(container, game, container.getGraphics());
+	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
@@ -42,6 +47,12 @@ public class Load extends BasicGameState {
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		// Update is always called first, so we need to skip the first update call
+		// in order to render before updating
+		if(!rendered) {
+			rendered = true;
+			return;
+		}
 		
 		// If an attempt to load has not been made yet, load the game
 		if(!loaded && !failed) {
@@ -54,8 +65,8 @@ public class Load extends BasicGameState {
 				// Load the world
 				World world = (World) SerializationUtil.load("world");
 				
+				// Checking for a failed load
 				if(world == null) {
-					// The game has failed to load
 					failed = true;
 					return;
 				}

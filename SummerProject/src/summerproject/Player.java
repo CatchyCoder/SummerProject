@@ -21,16 +21,23 @@ public class Player extends Circle implements Entity {
 	private float speed, dSpeed;
 	private Image image;
 	
-	public Player(float x, float y) {
-		super(x, y, 0);
-		speed = 5.0F;
+	// Used to see how much the player has moved from it's start point
+	// This way objects can be correctly rendered around the player
+	// since the player is always in the center of the world
+	private int offsetX = 0, offsetY = 0;
+	
+	public Player(final int CONT_WIDTH, final int CONT_HEIGHT) {
+		super(0, 0, 0);
+		speed = 0.3F;
 		dSpeed = (float) Math.sqrt(speed * speed / 2.0);
 		
 		try {
 			// Getting a file's absolute path is more robust than a mere hardcoded String path
 			File img = new File("res/icons/icon_32.png");
 			image = new Image(img.getAbsolutePath());
-			this.setRadius(Math.max(image.getWidth(), image.getHeight()));
+			this.setRadius(Math.max(image.getWidth(), image.getHeight()) / 2);
+			this.setCenterX(CONT_WIDTH / 2);
+			this.setCenterY(CONT_HEIGHT / 2);
 		} catch (SlickException e) {
 			log.error("Error loading player image.", e);
 		}
@@ -50,24 +57,44 @@ public class Player extends Circle implements Entity {
 		float currentSpeed = speed;
 		if(isMultiKey(up, down, left, right)) currentSpeed = dSpeed;
 		
-		// Player movement
-		if(up) y -= currentSpeed;
-		if(down) y += currentSpeed;
-		if(left) x -= currentSpeed;
-		if(right) x += currentSpeed;
+		// Incorporating time passed
+		currentSpeed *= delta;
+		
+		// Player movement (x and y never actually changes)
+		if(up) offsetY -= currentSpeed;
+		if(down) offsetY += currentSpeed;
+		if(left) offsetX -= currentSpeed;
+		if(right) offsetX += currentSpeed;
 		
 		// Rotating player to look at the mouse
 		int mouseX = container.getInput().getAbsoluteMouseX();
 		int mouseY = container.getInput().getAbsoluteMouseY();
-		World.rotateImageTo(image, this.x, this.y, mouseX, mouseY);
-	}
-	
-	public boolean isMultiKey(boolean up, boolean down, boolean left, boolean right) {
-		return (up && left) || (up && right) || (down && left) || (down && right);
+		World.rotateImageTo(image, this.getCenterX(), this.getCenterY(), mouseX, mouseY);
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) {
 		g.drawImage(image, this.x, this.y);
+	}
+	
+	@Override
+	public void handleCollision(Entity entity) {
+		
+	}
+	
+	public boolean isMultiKey(boolean up, boolean down, boolean left, boolean right) {
+		return (up && left) || (up && right) || (down && left) || (down && right);
+	}
+	
+	public void clearOffset() {
+		offsetX = offsetY = 0;
+	}
+	
+	public int getOffsetX() {
+		return offsetX;
+	}
+	
+	public int getOffsetY() {
+		return offsetY;
 	}
 }

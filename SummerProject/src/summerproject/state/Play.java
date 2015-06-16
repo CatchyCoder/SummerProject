@@ -12,14 +12,31 @@ import org.newdawn.slick.state.StateBasedGame;
 import summerproject.World;
 
 public class Play extends BasicGameState {
-	
+
 	private static final Logger log = LogManager.getLogger(Play.class);
 	
 	// Will be initialized by the Load state.
 	private World world;
 
 	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException {}
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {}
+
+	@Override
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+		super.enter(container, game);
+		/*
+		 * The entire screen is drawn on for each frame, so we don't need to
+		 * clear the frame before drawing
+		 */
+		container.setClearEachFrame(false);
+	}
+	
+	@Override
+	public void leave(GameContainer container, StateBasedGame game) throws SlickException {
+		super.leave(container, game);
+		world = null; // Destroy world data to clean up RAM
+		System.gc();
+	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
@@ -45,5 +62,4 @@ public class Play extends BasicGameState {
 	public int getID() {
 		return State.PLAY.ordinal();
 	}
-
 }

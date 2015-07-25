@@ -57,43 +57,47 @@ public class World implements Entity, Serializable {
 			Graphics g2 = background.getGraphics();
 			g2.setBackground(new Color(235, 225, 159));
 			g2.clear();
-			
-			// Generate ores
-			// For testing purposes, ores are more prevalent near the center
-			for(int oreGenerated = 0; oreGenerated < 50;) {
-				int oreX = (int)(Math.random() * WIDTH * 1);
-				int oreY = (int)(Math.random() * HEIGHT * 1);
-				oreX *= ((int)(Math.random() * 2) == 0 ? 1 : -1);
-				oreY *= ((int)(Math.random() * 2) == 0 ? 1 : -1);
-				double chanceToSpawn = 100; // Begins at a 100 in order to spawn the first ore
-				
-				IronOre closestOre;
-				double shortestDis = 0;
-				for(int n = 0; n < ironOre.size(); n++) {
-					if(shortestDis == 0) 
-					double distance = Math.sqrt(Math.pow(ironOre.get(n).getCenterX() - oreX, 2) + Math.pow(ironOre.get(n).getCenterY() - oreY, 2));
-					chanceToSpawn = 1000 / distance;
-				}
-				
-				
-//				// Basing the entities chance to spawn based off of the distance from the center of the world
-//				// the further away, the less likely to spawn
-//				double distance = Math.sqrt(Math.pow(player.getCenterX() - oreX, 2) + Math.pow(player.getCenterY() - oreY, 2));
-//				double chanceToSpawn = 1000 / distance;
-//				log.debug("Chance: " + chanceToSpawn + "   Dis: " + distance);
-				
-				// Spawn if == or < chance to spawn
-				if((int)(Math.random() * 100) <= chanceToSpawn) {
-					IronOre iron = new IronOre(oreX, oreY);
-					ironOre.add(iron);
-					oreGenerated++;
-				}
-				// Otherwise, do nothing
-			}
-			entities.addAll(ironOre);
 		} catch (SlickException e) {
 			log.error("Failed to create main World image.", e);
 		}
+		
+		generateIronOre(WIDTH, HEIGHT);
+	}
+	
+	private void generateIronOre(int WIDTH, int HEIGHT) {
+		for(int oreGenerated = 0; oreGenerated < 500;) {
+			int oreX = (int)(Math.random() * WIDTH * 2);
+			int oreY = (int)(Math.random() * HEIGHT * 2);
+			oreX *= ((int)(Math.random() * 2) == 0 ? 1 : -1);
+			oreY *= ((int)(Math.random() * 2) == 0 ? 1 : -1);
+			double chanceToSpawn = 0;
+			
+			if(ironOre.size() == 0 ) {
+				// Placing the first iron ore
+				IronOre ore = new IronOre(oreX, oreY);
+				ironOre.add(ore);
+				oreGenerated++;
+				continue;
+			}
+			else {
+				for(int n = 0; n < ironOre.size(); n++) {
+					// Calculating square distance
+					double distance = Math.pow(ironOre.get(n).getCenterX() - oreX, 2) + Math.pow(ironOre.get(n).getCenterY() - oreY, 2);
+					// The chance to spawn increases when closer to another ore (within a specified distance)
+					int clusterAmount = 100000; // The higher the cluster, the tighter the groups of ore
+					if(distance <= 2000) chanceToSpawn += clusterAmount / distance;
+				}
+			}
+		
+			// Spawn if == or < chance to spawn
+			if((int)(Math.random() * 100) <= chanceToSpawn) {
+				IronOre iron = new IronOre(oreX, oreY);
+				ironOre.add(iron);
+				oreGenerated++;
+			}
+			// Otherwise, do not spawn the ore nothing
+		}
+		entities.addAll(ironOre);
 	}
 
 	@Override

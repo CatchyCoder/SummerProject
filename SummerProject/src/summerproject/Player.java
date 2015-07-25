@@ -24,12 +24,12 @@ public class Player extends Circle implements Entity {
 	// Used to see how much the player has moved from it's start point
 	// This way objects can be correctly rendered around the player
 	// since the player is always in the center of the world
-	private int offsetX = 0, offsetY = 0;
+	private float offsetX = 0, offsetY = 0;
 	
 	public Player(final int CONT_WIDTH, final int CONT_HEIGHT) {
 		super(0, 0, 0);
 		speed = 0.3F;
-		dSpeed = (float) Math.sqrt(speed * speed / 2.0);
+		dSpeed = (float) Math.sqrt((speed * speed) / 2.0);
 		
 		try {
 			// Getting a file's absolute path is more robust than a mere hardcoded String path
@@ -90,11 +90,11 @@ public class Player extends Circle implements Entity {
 		offsetX = offsetY = 0;
 	}
 	
-	public int getOffsetX() {
+	public float getOffsetX() {
 		return offsetX;
 	}
 	
-	public int getOffsetY() {
+	public float getOffsetY() {
 		return offsetY;
 	}
 }
